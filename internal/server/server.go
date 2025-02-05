@@ -8,5 +8,5 @@ type HttpServer struct {
 }
 
 func (hs *HttpServer) Run() {
-	fmt.Printf("Http server running on %s:%s\n", hs.Host, hs.Port)
+	fmt.Printf("Http server running on http://%s:%s\n", hs.Host, hs.Port)
 }
