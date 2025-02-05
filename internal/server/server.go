@@ -2,6 +2,11 @@ package server
 
 import "fmt"
 
-func HttpServer() {
-	fmt.Println("Http server!")
+type HttpServer struct {
+	Host string
+	Port string
+}
+
+func (hs *HttpServer) Run() {
+	fmt.Printf("Http server running on %s:%s\n", hs.Host, hs.Port)
 }
