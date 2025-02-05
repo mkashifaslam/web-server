@@ -1,7 +1,6 @@
-# My Http Server in Go
+# Http Server in Go
 
-This is my attempt to write a http server from scratch in golang
-to learn golang.
+A basic http server in golang.
 
 ## Features
 
