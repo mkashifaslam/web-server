@@ -6,43 +6,43 @@ type Header map[string]interface{}
 
 const Version string = "HTTP/1.1"
 
-type Message interface {
+type Protocol interface {
 	Message() string
 }
 
-type RequestMessage struct {
+type Request struct {
 	Method  string
 	Path    string
 	Version string
 }
 
-func NewRequestMessage(method, path, version string) *RequestMessage {
-	return &RequestMessage{
+func NewRequest(method, path, version string) *Request {
+	return &Request{
 		Method:  method,
 		Path:    path,
 		Version: version,
 	}
 }
 
-func (m *RequestMessage) Message() string {
+func (m *Request) Message() string {
 	return fmt.Sprintf("%s %s %s", m.Method, m.Path, m.Version)
 }
 
-type ResponseMessage struct {
+type Response struct {
 	Version    string
 	StatusCode int
 	StatusText string
 }
 
-func NewResponseMessage(version string, statusCode int, statusText string) *ResponseMessage {
-	return &ResponseMessage{
+func NewResponse(version string, statusCode int, statusText string) *Response {
+	return &Response{
 		Version:    version,
 		StatusCode: statusCode,
 		StatusText: statusText,
 	}
 }
 
-func (m *ResponseMessage) Message() string {
+func (m *Response) Message() string {
 	return fmt.Sprintf("%s %d %s", m.Version, m.StatusCode, m.StatusText)
 }
 
@@ -52,8 +52,8 @@ type Http struct {
 	Body      []byte
 }
 
-func (h *Http) startLine(message Message) {
-	h.StartLine = message.Message()
+func (h *Http) startLine(prt Protocol) {
+	h.StartLine = prt.Message()
 }
 
 func (h *Http) header(key string, value interface{}) {
@@ -108,19 +108,19 @@ func (h *Http) FormatHeaders() string {
 	return response
 }
 
-func Request(message, path, body string, headers []Header) *Http {
-	req := NewRequestMessage(message, path, Version)
+func FormatRequest(message, path, body string, headers []Header) *Http {
+	req := NewRequest(message, path, Version)
 	return buildMessage(req, body, headers)
 }
 
-func Response(body string, statusCode int, statusText string, headers []Header) *Http {
-	res := NewResponseMessage(Version, statusCode, statusText)
+func FormatResponse(body string, statusCode int, statusText string, headers []Header) *Http {
+	res := NewResponse(Version, statusCode, statusText)
 	return buildMessage(res, body, headers)
 }
 
-func buildMessage(message Message, body string, headers []Header) *Http {
+func buildMessage(prt Protocol, body string, headers []Header) *Http {
 	http := &Http{}
-	http.startLine(message)
+	http.startLine(prt)
 	http.headers(headers)
 	http.ContentLength(len(body))
 	http.body(body)
