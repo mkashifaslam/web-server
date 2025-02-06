@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	http.Server()
+	http.Client()
 }

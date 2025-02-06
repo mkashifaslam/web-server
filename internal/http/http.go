@@ -108,8 +108,8 @@ func (h *Http) FormatHeaders() string {
 	return response
 }
 
-func FormatRequest(message, path, body string, headers []Header) *Http {
-	req := NewRequest(message, path, Version)
+func FormatRequest(method, path, body string, headers []Header) *Http {
+	req := NewRequest(method, path, Version)
 	return buildMessage(req, body, headers)
 }
 
