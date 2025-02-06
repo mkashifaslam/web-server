@@ -51,7 +51,7 @@ func handleConnection(conn net.Conn) {
 	fmt.Println(string(incoming[:read]))
 
 	// outgoing request
-	response := http.NewResponse("{\"message\":\"Ok!\"}", 200, "OK", []http.Header{
+	response := http.Response("{\"message\":\"Ok!\"}", 200, "OK", []http.Header{
 		{"Content-Type": "application/json"},
 	})
 

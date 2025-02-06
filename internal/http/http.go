@@ -108,20 +108,19 @@ func (h *Http) FormatHeaders() string {
 	return response
 }
 
-func NewRequest(message, path, body string, headers []Header) *Http {
+func Request(message, path, body string, headers []Header) *Http {
 	req := NewRequestMessage(message, path, Version)
-	http := &Http{}
-	http.startLine(req)
-	http.headers(headers)
-	http.ContentLength(len(body))
-	http.body(body)
-	return http
+	return buildMessage(req, body, headers)
 }
 
-func NewResponse(body string, statusCode int, statusText string, headers []Header) *Http {
+func Response(body string, statusCode int, statusText string, headers []Header) *Http {
 	res := NewResponseMessage(Version, statusCode, statusText)
+	return buildMessage(res, body, headers)
+}
+
+func buildMessage(message Message, body string, headers []Header) *Http {
 	http := &Http{}
-	http.startLine(res)
+	http.startLine(message)
 	http.headers(headers)
 	http.ContentLength(len(body))
 	http.body(body)
