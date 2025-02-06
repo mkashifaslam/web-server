@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"fmt"
+	"github.com/mkashifaslam/web-server/internal/http"
 	"net"
 )
 
@@ -50,10 +51,11 @@ func handleConnection(conn net.Conn) {
 	fmt.Println(string(incoming[:read]))
 
 	// outgoing request
-	body := fmt.Sprintf("{\"message\":\"Ok!\"}")
-	fmt.Println("Content Length:", len(body))
-	outgoing := []byte(fmt.Sprintf("HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: %d\n\n%s\n", len(body), body))
-	l, err := conn.Write(outgoing)
+	response := http.NewResponse("{\"message\":\"Ok!\"}", 200, "OK", []http.Header{
+		{"Content-Type": "application/json"},
+	})
+
+	l, err := conn.Write(response.Format())
 	if err != nil {
 		panic(err)
 	}
